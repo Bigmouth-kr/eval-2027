@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>2026 평가·면담 명단 조회</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#f4f5f7; --card:#ffffff; --ink:#1b1d21; --sub:#666b74; --line:#e3e5e9; --head:#f7f8fa;
+  --accent:#1f4e79;
+  --blue:#1d5fbf; --blue-soft:#e8f0fc;
+  --red:#c2362b; --red-soft:#fcebe9;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131418; --card:#1c1e23; --ink:#eceef1; --sub:#a0a5ae; --line:#2f3238; --head:#22252b;
+    --accent:#8fb8e6;
+    --blue:#7fb0f5; --blue-soft:#1b2a40;
+    --red:#f08a80; --red-soft:#3a1f1d;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  -webkit-font-smoothing:antialiased; word-break:keep-all}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 64px}
+
+/* infographic */
+.info{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 20px 20px}
+.info .eyebrow{font-size:13px;color:var(--sub)}
+.info h1{font-size:24px;line-height:1.35;margin:4px 0 6px;font-weight:700}
+.info .lead{margin:0;color:var(--sub);font-size:14px;line-height:1.6}
+
+
+/* search */
+.search{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px 0 10px}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line);
+  border-radius:14px;padding:0 14px;transition:border-color .15s}
+.search-box:focus-within{border-color:var(--accent)}
+.search-box svg{flex:none;color:var(--sub)}
+.search-box input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:17px;padding:15px 0}
+.search-box button{border:0;background:transparent;color:var(--sub);font:inherit;font-size:14px;cursor:pointer;padding:6px}
+.suggest{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.suggest:empty{display:none}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.chip small{color:var(--sub);margin-left:4px}
+.hint{color:var(--sub);font-size:14px;margin-top:8px}
+.hint:empty{display:none}
+
+/* sections */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px 8px;margin-top:14px}
+.sec-title{font-size:15px;font-weight:700;margin:0 0 4px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sec-title em{font-style:normal;font-weight:500;color:var(--sub);font-size:13px}
+.sec-desc{font-size:13px;color:var(--sub);margin:0 0 12px;line-height:1.55}
+.empty{color:var(--sub);font-size:14px;padding:4px 0 12px}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;margin-bottom:10px}
+.tbl th{background:var(--head);color:var(--sub);font-weight:600;font-size:12.5px;padding:9px 6px;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{text-align:left;padding-left:10px}
+.tbl td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl col.c-name{width:34%}
+.tbl.who col.c-role{width:38%}
+.tbl tr.grp td{background:var(--head);font-size:12.5px;font-weight:700;color:var(--ink);padding:7px 10px;text-align:left;border-top:1px solid var(--line)}
+.tbl tr.grp td span{font-weight:500;color:var(--sub);margin-left:4px}
+.meta:empty{display:none}
+.nm{font-weight:600;font-size:15px}
+.meta{font-size:12px;color:var(--sub);margin-top:2px;line-height:1.4}
+.link{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+.link:hover .nm{text-decoration:underline}
+.pill{display:inline-block;min-width:52px;font-size:12.5px;font-weight:600;border-radius:6px;padding:4px 6px;white-space:nowrap}
+.pill.y{background:var(--blue-soft);color:var(--blue)}
+.pill.n{background:var(--red-soft);color:var(--red)}
+.role{display:inline-block;white-space:nowrap;font-size:12.5px;font-weight:600;border-radius:6px;padding:4px 8px;background:var(--head);color:var(--ink);border:1px solid var(--line)}
+.me .tbl td{padding:14px 6px}
+.me .nm{font-size:17px}
+
+footer{margin-top:36px;font-size:12.5px;color:var(--sub);line-height:1.7}
+footer b{color:var(--ink);font-weight:600}
+
+@media (max-width:480px){
+  .info h1{font-size:21px}
+  .tbl{font-size:13px}
+  .tbl col.c-name{width:31%}
+  .pill{min-width:0;padding:4px 5px;font-size:12px}
+  .card{padding:16px 12px 6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="info" aria-label="안내">
+    <div class="eyebrow">한백그룹 · 2026 성장담화 · 2026 성과평가 · 2027 연봉협상</div>
+    <h1>평가·면담 명단 조회</h1>
+    <p class="lead">이름을 검색하면 본인의 대상 여부와, 누구에게 평가·면담을 받고 누구를 평가·면담하는지 확인할 수 있습니다.</p>
+  </section>
+
+  <div class="search">
+    <div class="search-box">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="text" enterkeyhint="search" inputmode="search" autocomplete="off" placeholder="이름을 입력하세요 (예: 홍길동)" aria-label="이름 검색">
+      <button id="clear" type="button" hidden>지우기</button>
+    </div>
+    <div id="suggest" class="suggest"></div>
+    <div id="hint" class="hint"></div>
+  </div>
+
+  <main id="result"></main>
+
+  <footer>
+    <div>기준일 <b id="asof"></b> · 기준일 이후 변경 사항은 반영되지 않았을 수 있습니다.</div>
+    <div>내용이 사실과 다르면 이성욱에게 문의해 주세요.</div>
+  </footer>
+</div>
+
+<script>
+const AS_OF = "2026-10-24";
+
+/* [이름, 부서, 현장, 평가자, 참고인, 연봉협상, 성과평가, 성장담화, 성장담화 진행여부, 성장담화 일정] */
+const ROWS = [
+["유태웅","가공송전팀","","이춘호","","비대상","대상","미해당","예정",""],
+["이지수","가공송전팀","","이춘호","","비대상","대상","미해당","예정",""],
+["이춘호","가공송전팀","","윤우람","","비대상","대상","미해당","예정",""],
+["진명중","가공송전팀","","이춘호","","비대상","대상","미해당","예정",""],
+["형해원","가공송전팀","","이춘호","","비대상","대상","미해당","예정",""],
+["문현호","관급사업단","","송광수","","대상","대상","해당","예정",""],
+["송광수","관급사업단","","조용대","","대상","대상","해당","예정",""],
+["이정현","관급사업단","","송광수","","대상","대상","해당","예정",""],
+["정여은","관급사업단","","송광수","","대상","대상","해당","예정",""],
+["남창호","기능단","","윤우람","","비대상","대상","해당","예정",""],
+["윤영태","기능단","","남창호","","대상","대상","해당","예정",""],
+["이준호","기능단","","남창호","","대상","대상","해당","예정",""],
+["조길선","기능단","","윤우람","","비대상","대상","미해당","예정",""],
+["하경훈","기능단","","남창호","","대상","대상","해당","예정",""],
+["김달옹","도통사업부","도통사업부","조용규","이형민","대상","대상","해당","예정",""],
+["김수환","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["김시형","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["김태석","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["백인제","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["신옥주","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["신정민","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["오용근","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["이정모","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["이정우","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["이충무","도통사업부","도통사업부","김달옹","","대상","대상","해당","예정",""],
+["임상우","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["최명국","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["황대훈","도통사업부","도통사업부","김달옹","이충무","대상","대상","해당","예정",""],
+["류승종","도통운영","도통사업부","이형민","조용규","대상","대상","해당","예정",""],
+["이연희","도통운영","도통사업부","이형민","조용규","대상","대상","해당","예정",""],
+["이형민","도통운영","도통사업부","조용규","김달옹","대상","대상","해당","예정",""],
+["차수정","도통운영","도통사업부","이형민","조용규","대상","대상","해당","예정",""],
+["박인섭","무실론자","","윤우람","","비대상","대상","미해당","예정",""],
+["전성진","무실론자","","윤우람","","비대상","비대상","미해당","취소",""],
+["강철균","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["곽진철","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["김성웅","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["김종수","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["김종아","무정전기능","무정전사업부","조용규","한상곤","대상","대상","해당","예정",""],
+["김태훈","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["김행수","무정전기능","무정전사업부","김종아","장준호","비대상","대상","해당","예정",""],
+["류일환","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["윤덕중","무정전기능","무정전사업부","김종아","장준호","비대상","대상","해당","예정",""],
+["윤동현","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["이영석","무정전기능","무정전사업부","김종아","장준호","비대상","대상","해당","예정",""],
+["이춘일","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["장준호","무정전기능","무정전사업부","김종아","","대상","대상","해당","예정",""],
+["정용재","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["정운영","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["조주현","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["최영진","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["한성준","무정전기능","무정전사업부","김종아","장준호","대상","대상","해당","예정",""],
+["김건오","무정전운영","무정전사업부","한상곤","조용규","대상","대상","해당","예정",""],
+["최명욱","무정전운영","무정전사업부","한상곤","조용규","대상","대상","해당","예정",""],
+["한상곤","무정전운영","무정전사업부","조용규","김종아","대상","대상","해당","예정",""],
+["고예림","문화단","","이성욱","","비대상","비대상","해당","예정",""],
+["유하늬","문화단","","이성욱","나병무","대상","대상","해당","예정",""],
+["이건희","문화단","","이성욱","나병무","대상","대상","해당","예정",""],
+["최인규","문화단","","이성욱","나병무","대상","대상","해당","예정",""],
+["최화진","문화단","","이성욱","나병무","대상","대상","해당","예정",""],
+["기승도","배전사업부","","박종남","노인경","비대상","대상","해당","예정",""],
+["김훈","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["노인경","배전사업부","","박종남","","대상","대상","해당","예정",""],
+["박종남","배전사업부","","조용규","박정환","대상","대상","해당","예정",""],
+["손우현","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["송영종","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["신종구","배전사업부","","박종남","노인경","비대상","대상","해당","예정",""],
+["안광민","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["양영재","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["황대연","배전사업부","","박종남","노인경","대상","대상","해당","예정",""],
+["박기석","배전운영","","조용규","박정환","비대상","대상","해당","예정",""],
+["박정환","배전운영","","조용규","박종남","대상","대상","해당","예정",""],
+["양동춘","배전운영","","조용규","박정환","대상","대상","해당","예정",""],
+["정요한","배전운영","","조용규","박정환","대상","대상","해당","예정",""],
+["정진호","배전운영","","조용규","박정환","대상","대상","해당","예정",""],
+["고은빈","송변전사업부","","정동호","","대상","대상","해당","예정",""],
+["공순오","송변전사업부","","이정수","최규일","대상","대상","해당","예정",""],
+["권기철","송변전사업부","","서일석","","대상","대상","해당","예정",""],
+["권태민","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["김강수","송변전사업부","","김병웅","","대상","대상","해당","예정",""],
+["김병웅","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["김우리","송변전사업부","","오진욱","","대상","대상","해당","예정",""],
+["김유창","송변전사업부","","서일석","","대상","대상","해당","예정",""],
+["김재식","송변전사업부","","임대섭","이정수","대상","대상","해당","예정",""],
+["김준일","송변전사업부","","정동호","","대상","대상","해당","예정",""],
+["김춘수","송변전사업부","","오진욱","","비대상","대상","해당","예정",""],
+["김태권","송변전사업부","","서일석","","대상","대상","해당","예정",""],
+["김현철","송변전사업부","","최규일","","비대상","비대상","해당","예정",""],
+["서이수","송변전사업부","","오진욱","","대상","대상","해당","예정",""],
+["서일석","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["신준하","송변전사업부","","오진욱","","비대상","대상","해당","예정",""],
+["심동섭","송변전사업부","","오진욱","","대상","대상","해당","예정",""],
+["양재훈","송변전사업부","","최규일","김순호","대상","대상","해당","예정",""],
+["오진욱","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["윤춘식","송변전사업부","","오진욱","","대상","대상","해당","예정",""],
+["이성호","송변전사업부","","이정수","","비대상","비대상","해당","예정",""],
+["이훈","송변전사업부","","오진욱","","대상","대상","해당","예정",""],
+["임대섭","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["전용주","송변전사업부","","권태민","","대상","대상","해당","예정",""],
+["정동호","송변전사업부","","최규일","","대상","대상","해당","예정",""],
+["정용주","송변전사업부","","정동호","","대상","대상","해당","예정",""],
+["정운연","송변전사업부","","서일석","","비대상","대상","해당","예정",""],
+["정태식","송변전사업부","","권태민","이정수","비대상","대상","해당","예정",""],
+["홍준석","송변전사업부","","이정수","","비대상","비대상","해당","예정",""],
+["김순호","안전단","","윤우람","","비대상","대상","해당","예정",""],
+["김종혁","영업개발단","","조용대","","대상","대상","해당","예정",""],
+["양지원","운영단","","최규일","","대상","대상","해당","예정",""],
+["최규일","운영단","","윤우람","조용대","대상","대상","해당","예정",""],
+["최근희","운영단","","최규일","","대상","대상","해당","예정",""],
+["기소정","재무단","","양현민","나병무","대상","대상","해당","예정",""],
+["김유나","재무단","","양현민","나병무","대상","대상","해당","예정",""],
+["김하늘","재무단","","양현민","나병무","대상","대상","해당","예정",""],
+["양현민","재무단","","윤우람","나병무","대상","대상","해당","예정",""],
+["조주희","재무단","","양현민","나병무","대상","대상","해당","예정",""],
+["김정우","전기차사업부","","윤우람","","대상","대상","해당","예정",""],
+["김지용","전기차사업부","","김정우","","대상","대상","해당","예정",""],
+["조용규","전력보강처","","윤우람","","대상","대상","해당","예정",""],
+["류무열","지중접속팀","","전병수","","대상","대상","해당","예정",""],
+["장선호","지중접속팀","","전병수","","대상","대상","해당","예정",""],
+["전병수","지중접속팀","","윤우람","조용대","비대상","비대상","해당","취소",""],
+["정상열","지중접속팀","","전병수","","대상","대상","해당","예정",""],
+["나병무","최고경영","","윤우람","","대상","대상","해당","예정",""],
+["윤우람","최고경영","","","","대상","대상","해당","예정",""],
+["이성욱","최고경영","","윤우람","","대상","대상","해당","예정",""],
+["조용대","최고경영","","윤우람","","대상","대상","해당","예정",""],
+["심재호","해외EPC사업부","","이정수","이민호","대상","대상","해당","예정",""],
+["이민호","해외EPC사업부","","윤우람","","대상","대상","해당","예정",""],
+["이정수","해외EPC사업부","","조용대","최규일","대상","대상","해당","예정",""],
+["신재연","해외사업개발1팀","","유석열","김진희","대상","대상","해당","예정",""],
+["유석열","해외사업개발1팀","","윤우람","김진희","대상","대상","해당","예정",""],
+["구자현","해외사업개발2팀","","김진희","유석열","대상","대상","해당","예정",""],
+["김신애","해외사업개발2팀","","김진희","유석열","대상","대상","해당","예정",""],
+["김진희","해외사업개발2팀","","윤우람","유석열","대상","대상","해당","예정",""]
+];
+
+const P = ROWS.map(r => ({
+  name:r[0], dept:r[1], site:r[2], evaluator:r[3], ref:r[4],
+  salary:r[5]==="대상", perf:r[6]==="대상", growth:r[7]==="해당", growthStatus:r[8], growthDate:r[9]
+}));
+
+const $ = s => document.querySelector(s);
+const q=$("#q"), suggest=$("#suggest"), hint=$("#hint"), result=$("#result"), clearBtn=$("#clear");
+$("#asof").textContent = AS_OF.replace(/-/g,".");
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => s.replace(/\s+/g,"");
+const deptLabel = p => p.site && p.site !== p.dept ? `${p.dept} · ${p.site}` : (p.dept || "");
+const fmtDate = d => d ? d.slice(5,10).replace("-","/") : "";
+
+const pill = ok => `<span class="pill ${ok?"y":"n"}">${ok?"대상":"비대상"}</span>`;
+function growthPill(p){
+  if(!p.growth) return pill(false);
+  if(p.growthStatus === "취소") return `<span class="pill n">취소</span>`;
+  if(p.growthStatus === "완료") return `<span class="pill y">완료</span>`;
+  if(p.growthStatus === "진행 중") return `<span class="pill y">진행 중</span>`;
+  return `<span class="pill y">대상${p.growthDate?` ${fmtDate(p.growthDate)}`:""}</span>`;
+}
+
+function nameCell(p, extra){
+  return `<button class="link" type="button" data-name="${esc(p.name)}">
+    <div class="nm">${esc(p.name)}</div>
+    <div class="meta">${esc(extra ?? deptLabel(p))}</div>
+  </button>`;
+}
+
+function statusTable(list, metaFn){
+  return `<table class="tbl">
+    <colgroup><col class="c-name"><col><col><col></colgroup>
+    <thead><tr><th>이름</th><th>성장담화</th><th>성과평가</th><th>연봉협상</th></tr></thead>
+    <tbody>${list.map(x => statusRow(x, metaFn)).join("")}</tbody>
+  </table>`;
+}
+function statusRow(x, metaFn){
+  return `<tr>
+      <td>${nameCell(x, metaFn ? metaFn(x) : undefined)}</td>
+      <td>${growthPill(x)}</td><td>${pill(x.perf)}</td><td>${pill(x.salary)}</td>
+    </tr>`;
+}
+/* 부서별로 묶어 표시 (부서명 → 이름 가나다순) */
+function groupedTable(list, metaFn){
+  const sorted = [...list].sort((a,b) => a.dept.localeCompare(b.dept,"ko") || a.name.localeCompare(b.name,"ko"));
+  const groups = [];
+  sorted.forEach(x => {
+    const g = groups[groups.length-1];
+    if(g && g.dept === x.dept) g.items.push(x); else groups.push({dept:x.dept, items:[x]});
+  });
+  return `<table class="tbl">
+    <colgroup><col class="c-name"><col><col><col></colgroup>
+    <thead><tr><th>이름</th><th>성장담화</th><th>성과평가</th><th>연봉협상</th></tr></thead>
+    <tbody>${groups.map(g => `
+      <tr class="grp"><td colspan="4">${esc(g.dept || "부서 미지정")} <span>${g.items.length}명</span></td></tr>
+      ${g.items.map(x => statusRow(x, metaFn)).join("")}`).join("")}</tbody>
+  </table>`;
+}
+
+function render(p){
+  const byName = n => P.find(x => x.name === n) || {name:n, dept:""};
+  const above = [];
+  if(p.evaluator) above.push(["평가자 · 면담자", byName(p.evaluator)]);
+  if(p.ref && p.ref !== p.name) above.push(["참고인", byName(p.ref)]);
+  const iEvaluate = P.filter(x => x.evaluator === p.name && x.name !== p.name);
+  const iReference = P.filter(x => x.ref === p.name && x.name !== p.name);
+
+  const aboveHtml = above.length ? `<table class="tbl who">
+      <colgroup><col class="c-role"><col></colgroup>
+      <thead><tr><th>구분</th><th style="text-align:left">이름</th></tr></thead>
+      <tbody>${above.map(([role, x]) => `<tr>
+        <td><span class="role">${role}</span></td>
+        <td style="text-align:left">${nameCell(x)}</td>
+      </tr>`).join("")}</tbody>
+    </table>` : `<div class="empty">지정된 평가자가 없습니다.</div>`;
+
+  result.innerHTML = `
+    <section class="card me">
+      <h3 class="sec-title">내 대상 여부</h3>
+      ${statusTable([p])}
+    </section>
+
+    <section class="card">
+      <h3 class="sec-title">나를 평가·면담하는 사람</h3>
+      <p class="sec-desc">성과평가와 성장담화 1:1 면담은 평가자와 진행합니다.</p>
+      ${aboveHtml}
+    </section>
+
+    <section class="card">
+      <h3 class="sec-title">내가 평가·면담하는 사람 <em>${iEvaluate.length}명</em></h3>
+      ${iEvaluate.length
+        ? `<p class="sec-desc">이름을 누르면 해당 직원의 조회 화면으로 이동합니다.</p>${groupedTable(iEvaluate, x => x.site && x.site !== x.dept ? x.site : "")}`
+        : `<div class="empty">평가·면담할 대상자가 없습니다.</div>`}
+    </section>
+
+    ${iReference.length ? `
+    <section class="card">
+      <h3 class="sec-title">내가 참고인인 대상자 <em>${iReference.length}명</em></h3>
+      <p class="sec-desc">평가자가 이 사람들을 평가할 때 의견을 드리는 역할입니다.</p>
+      ${groupedTable(iReference, x => `평가자 ${x.evaluator}`)}
+    </section>` : ""}`;
+  window.scrollTo({top: document.querySelector(".search").offsetTop, behavior:"smooth"});
+}
+
+function search(){
+  const v = norm(q.value);
+  clearBtn.hidden = !v;
+  suggest.innerHTML = ""; hint.textContent = "";
+  if(!v){ result.innerHTML = ""; return; }
+  const exact = P.filter(p => p.name === v);
+  if(exact.length === 1){ render(exact[0]); return; }
+  const partial = P.filter(p => p.name.includes(v));
+  const list = exact.length > 1 ? exact : partial;
+  if(list.length > 1){
+    result.innerHTML = "";
+    hint.textContent = `${list.length}명이 검색되었습니다. 본인을 선택하세요.`;
+    suggest.innerHTML = list.slice(0,20).map(p =>
+      `<button class="chip" type="button" data-name="${esc(p.name)}" data-dept="${esc(p.dept)}">${esc(p.name)}<small>${esc(p.dept)}</small></button>`).join("");
+    return;
+  }
+  if(list.length === 1 && v.length >= 2){ render(list[0]); return; }
+  result.innerHTML = "";
+  if(v.length >= 2) hint.textContent = "명단에서 찾을 수 없습니다. 이름을 다시 확인하거나 이성욱에게 문의해 주세요.";
+}
+
+function pick(name, dept){
+  const p = P.find(x => x.name === name && (!dept || x.dept === dept));
+  if(!p) return;
+  q.value = p.name; clearBtn.hidden = false; suggest.innerHTML = ""; hint.textContent = "";
+  render(p);
+}
+
+let t;
+q.addEventListener("input", () => { clearTimeout(t); t = setTimeout(search, 120); });
+q.addEventListener("keydown", e => { if(e.key === "Enter"){ clearTimeout(t); search(); q.blur(); } });
+clearBtn.addEventListener("click", () => { q.value = ""; search(); q.focus(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-name]");
+  if(b) pick(b.dataset.name, b.dataset.dept);
+});
+</script>
+</body>
+</html>
